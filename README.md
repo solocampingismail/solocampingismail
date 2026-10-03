@@ -8,7 +8,9 @@ in this repository target YouTube only.
 
 The Turkish homepage is `/` and the English version is `/en/`. Both include
 canonical and `hreflang` metadata, video links, and the channel's media-kit links.
-The static site can be hosted with GitHub Pages, Netlify, or Vercel.
+Both homepages also provide visitor-initiated share links for WhatsApp,
+Telegram, Facebook, X, and Reddit; they do not publish automatically. The static
+site can be hosted with GitHub Pages, Netlify, or Vercel.
 
 ## Video discovery integrations
 
