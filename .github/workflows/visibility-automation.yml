@@ -1,0 +1,91 @@
+name: Visibility automation
+
+on:
+  schedule:
+    - cron: '0 12 * * 2,4,6'
+  workflow_dispatch:
+    inputs:
+      language:
+        description: "Caption language (auto uses English except Thursday's Turkish slot)"
+        required: true
+        type: choice
+        options:
+          - auto
+          - en
+          - tr
+        default: auto
+
+concurrency:
+  group: social-publishing-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build-visibility-pack:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Test visibility pack
+        run: python -m unittest discover -s tests -v
+
+      - name: Generate social visibility pack
+        run: python3 automation/generate_visibility_pack.py
+
+      - name: Preview or publish to configured channels
+        env:
+          AUTO_PUBLISH: ${{ secrets.AUTO_PUBLISH || 'false' }}
+          X_USER_ACCESS_TOKEN: ${{ secrets.X_USER_ACCESS_TOKEN }}
+          META_GRAPH_API_VERSION: ${{ vars.META_GRAPH_API_VERSION }}
+          FACEBOOK_PAGE_ID: ${{ secrets.FACEBOOK_PAGE_ID }}
+          FACEBOOK_PAGE_ACCESS_TOKEN: ${{ secrets.FACEBOOK_PAGE_ACCESS_TOKEN }}
+          INSTAGRAM_ACCESS_TOKEN: ${{ secrets.INSTAGRAM_ACCESS_TOKEN }}
+          INSTAGRAM_BUSINESS_ACCOUNT_ID: ${{ secrets.INSTAGRAM_BUSINESS_ACCOUNT_ID }}
+          PINTEREST_ACCESS_TOKEN: ${{ secrets.PINTEREST_ACCESS_TOKEN }}
+          PINTEREST_BOARD_ID: ${{ secrets.PINTEREST_BOARD_ID }}
+          PUBLISH_LANGUAGE: ${{ inputs.language || 'auto' }}
+        run: |
+          set -o pipefail
+          LANGUAGE="$PUBLISH_LANGUAGE"
+          if [ "$LANGUAGE" = "auto" ]; then
+            if [ "$(date -u +%u)" = "4" ]; then
+              LANGUAGE="tr"
+            else
+              LANGUAGE="en"
+            fi
+          fi
+          if [ "$AUTO_PUBLISH" = "true" ]; then
+            python3 automation/social_publisher.py --language "$LANGUAGE" | tee publish-results.jsonl
+          else
+            python3 automation/social_publisher.py --dry-run --language "$LANGUAGE" | tee publish-results.jsonl
+          fi
+
+      - name: Save publishing report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: social-publishing-report-${{ github.run_id }}
+          path: publish-results.jsonl
+          if-no-files-found: ignore
+
+      - name: Commit generated pack and publication ledger
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add automation/generated/social-visibility-pack.md automation/generated/social-visibility-pack.json automation/generated/publishing-ledger.json
+          git diff --cached --quiet || git commit -m "Update social visibility pack"
+
+      - name: Push changes
+        if: always()
+        run: git push
