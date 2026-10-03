@@ -21,17 +21,32 @@ from the site's video cards. Google, Bing, and other crawlers may use these
 public standards, but indexing or video placements are not guaranteed.
 After each successful GitHub Pages deployment, the workflow submits the public
 site and video-page URLs to the IndexNow endpoint. IndexNow shares accepted
-notifications among participating services (currently including Bing, Yandex,
-Seznam, Naver, Yep, and others listed by the protocol). The published key file
-verifies the GitHub Pages project-path URL scope.
+notifications among participating services, including Bing, Yandex, Seznam,
+Naver, Yep, and others listed by the protocol. The published key file verifies
+the GitHub Pages project-path URL scope.
 
-IndexNow does not include Google. The owner should verify the site in Google
-Search Console and Bing Webmaster Tools and submit both sitemap URLs there;
-those owner-only account-verification steps cannot be performed from this
-repository. Search-engine receipt does not guarantee indexing or placement.
-There is no universal directory that registers a YouTube channel on every
-"view" or discovery website. This project does not connect to paid-view,
-exchange, or bot-traffic services.
+IndexNow does not include Google, and its key only authorizes URLs on this
+GitHub Pages host; it cannot submit YouTube URLs. Google Search Console also
+supports YouTube as a **Platform property**. To add the channel, the owner must
+sign in to Search Console with the Google account that owns
+`https://www.youtube.com/@solocampingismail`, use the property selector to add a
+property, select the YouTube platform option, enter the channel URL, and
+complete Google's on-screen channel ownership check. Do not use DNS or HTML
+verification for the YouTube channel: only YouTube account ownership can prove
+that platform property. This requires an authenticated owner session and cannot
+be done by this repository's deployment workflow.
+
+Separately, verify the GitHub Pages website URL-prefix property in Search
+Console and Bing Webmaster Tools, then submit
+`https://solocampingismail.github.io/solocampingismail/sitemap.xml` and
+`https://solocampingismail.github.io/solocampingismail/video-sitemap.xml`.
+These website sitemaps describe the two videos whose public pages and titles
+were verified; add other videos only after confirming their public URLs and
+metadata. YouTube's own public video and channel pages can be crawled directly
+by search engines, but no submission or verification guarantees indexing,
+placement, impressions, or engagement. There is no universal directory that
+registers a YouTube channel on every discovery service. This project does not
+connect to paid-view, exchange, or bot-traffic services.
 
 For local development:
 
