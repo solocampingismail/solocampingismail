@@ -9,6 +9,7 @@ from unittest.mock import Mock, patch
 
 import automation.youtube_channel as youtube
 import automation.submit_indexnow as indexnow
+import automation.generate_youtube_discovery as discovery
 
 
 class YouTubeChannelTests(unittest.TestCase):
@@ -133,6 +134,15 @@ class YouTubeChannelTests(unittest.TestCase):
         for page in (root / "index.html", root / "en" / "index.html"):
             content = page.read_text(encoding="utf-8")
             self.assertIn("https://www.youtube.com/@solocampingismail", content)
+            self.assertIn(
+                "UC87pVteBukFzQv_xA1UC6Kg",
+                content,
+            )
+            self.assertIn(
+                "UU87pVteBukFzQv_xA1UC6Kg",
+                content,
+            )
+            self.assertNotIn("UC87pVteBukFZqv_xA1UC6Kg", content)
 
     def test_video_discovery_pages_and_sitemaps_are_connected(self):
         root = Path(__file__).resolve().parents[1]
@@ -192,12 +202,91 @@ class YouTubeChannelTests(unittest.TestCase):
             self.assertEqual(video_object["@type"], "VideoObject")
             self.assertIn("youtube.com/watch?v=", video_object["url"])
 
+    def test_verified_channel_rss_creates_recent_video_pages_and_sitemap(self):
+        feed = b"""<?xml version="1.0"?>
+        <feed xmlns="http://www.w3.org/2005/Atom"
+              xmlns:yt="http://www.youtube.com/xml/schemas/2015"
+              xmlns:media="http://search.yahoo.com/mrss/">
+          <yt:channelId>87pVteBukFzQv_xA1UC6Kg</yt:channelId>
+          <entry>
+            <yt:videoId>abcDE123_-9</yt:videoId>
+            <title>Rain &amp; Camp &lt;script&gt;</title>
+            <published>2026-10-01T12:30:00+00:00</published>
+            <media:group>
+              <media:description>Camping &amp; rain.</media:description>
+              <media:thumbnail url="https://i.ytimg.com/vi/abcDE123_-9/hqdefault.jpg"/>
+            </media:group>
+          </entry>
+        </feed>"""
+        videos = discovery.parse_feed(feed)
+        self.assertEqual(videos[0]["video_id"], "abcDE123_-9")
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            page_dir = root / "channel-videos"
+            sitemap_path = root / "youtube-video-sitemap.xml"
+            generated = discovery.generate_discovery_pages(
+                videos,
+                output_dir=page_dir,
+                sitemap_path=sitemap_path,
+                curated_pages_dir=root / "curated",
+            )
+            self.assertEqual(generated, 1)
+            page = (page_dir / "abcDE123_-9" / "index.html").read_text()
+            self.assertIn("Rain &amp; Camp &lt;script&gt;", page)
+            self.assertIn(r"\u003cscript>", page)
+            generated_sitemap = ET.parse(sitemap_path).getroot()
+            entries = generated_sitemap.findall(
+                "s:url",
+                {"s": "http://www.sitemaps.org/schemas/sitemap/0.9"},
+            )
+            self.assertEqual(len(entries), 1)
+            video_namespaces = {
+                "v": "http://www.google.com/schemas/sitemap-video/1.1"
+            }
+            description = entries[0].findtext(
+                "v:video/v:description", namespaces=video_namespaces
+            )
+            publication_date = entries[0].findtext(
+                "v:video/v:publication_date", namespaces=video_namespaces
+            )
+            self.assertLessEqual(len(description), 2048)
+            self.assertEqual(publication_date, videos[0]["published"])
+
+    def test_channel_rss_generator_rejects_wrong_channel_and_thumbnail_hosts(self):
+        wrong_channel_feed = b"""<feed xmlns="http://www.w3.org/2005/Atom"
+          xmlns:yt="http://www.youtube.com/xml/schemas/2015">
+          <yt:channelId>UCnotthischannel</yt:channelId></feed>"""
+        with self.assertRaisesRegex(ValueError, "does not match"):
+            discovery.parse_feed(wrong_channel_feed)
+
+        bad_thumbnail_feed = b"""<feed xmlns="http://www.w3.org/2005/Atom"
+              xmlns:yt="http://www.youtube.com/xml/schemas/2015"
+              xmlns:media="http://search.yahoo.com/mrss/">
+          <yt:channelId>87pVteBukFzQv_xA1UC6Kg</yt:channelId>
+          <entry><yt:videoId>abcDE123_-9</yt:videoId><title>Camping</title>
+            <published>2026-10-01T12:30:00+00:00</published>
+            <media:group><media:thumbnail url="https://attacker.example/image.jpg"/></media:group>
+          </entry></feed>"""
+        with self.assertRaisesRegex(ValueError, "thumbnail URL"):
+            discovery.parse_feed(bad_thumbnail_feed)
+
     def test_indexnow_submits_only_site_urls_from_both_sitemaps(self):
         urls = indexnow.load_urls()
         payload = indexnow.build_payload(
             urls, indexnow.KEY_PATH.read_text(encoding="utf-8").strip()
         )
-        self.assertEqual(len(urls), 6)
+        with patch.object(indexnow, "SITEMAPS", indexnow.SITEMAPS[:2]):
+            baseline_urls = set(indexnow.load_urls())
+        generated_sitemap = ET.parse(
+            Path(__file__).resolve().parents[1] / "youtube-video-sitemap.xml"
+        ).getroot()
+        dynamic_urls = {
+            element.text.strip()
+            for element in generated_sitemap.iter(indexnow.SITEMAP_NAMESPACE)
+            if element.text
+        }
+        self.assertEqual(set(urls), baseline_urls | dynamic_urls)
+        self.assertGreaterEqual(len(urls), len(baseline_urls))
         self.assertEqual(payload["host"], "solocampingismail.github.io")
         self.assertEqual(payload["urlList"], urls)
         self.assertEqual(

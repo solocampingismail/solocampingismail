@@ -14,7 +14,11 @@ ROOT = Path(__file__).resolve().parent.parent
 SITE_URL = "https://solocampingismail.github.io/solocampingismail/"
 SITE_HOST = urlparse(SITE_URL).netloc
 KEY_PATH = ROOT / "4d83a4010876b1810494ea664b458271.txt"
-SITEMAPS = (ROOT / "sitemap.xml", ROOT / "video-sitemap.xml")
+SITEMAPS = (
+    ROOT / "sitemap.xml",
+    ROOT / "video-sitemap.xml",
+    ROOT / "youtube-video-sitemap.xml",
+)
 INDEXNOW_ENDPOINT = "https://api.indexnow.org/indexnow"
 SITEMAP_NAMESPACE = "{http://www.sitemaps.org/schemas/sitemap/0.9}loc"
 
@@ -23,6 +27,8 @@ def load_urls() -> list[str]:
     urls: set[str] = set()
     site_prefix = SITE_URL.rstrip("/") + "/"
     for sitemap in SITEMAPS:
+        if not sitemap.exists() and sitemap.name == "youtube-video-sitemap.xml":
+            continue
         tree = ET.parse(sitemap)
         for element in tree.iter(SITEMAP_NAMESPACE):
             if not element.text:

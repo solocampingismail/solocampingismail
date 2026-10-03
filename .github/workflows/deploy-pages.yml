@@ -1,6 +1,8 @@
 name: Deploy static site to GitHub Pages
 
 on:
+  schedule:
+    - cron: "17 4 * * 1"
   push:
     branches: [ main ]
   workflow_dispatch:
@@ -26,6 +28,10 @@ jobs:
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
+
+      - name: Refresh recent YouTube video pages
+        continue-on-error: true
+        run: python3 automation/generate_youtube_discovery.py
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

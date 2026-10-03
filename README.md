@@ -19,6 +19,14 @@ YouTube players, Open Graph previews, and `VideoObject` structured data for the
 two videos whose public titles were verified. The watch pages are discoverable
 from the site's video cards. Google, Bing, and other crawlers may use these
 public standards, but indexing or video placements are not guaranteed.
+
+The channel's public YouTube RSS feed uses the verified channel ID
+`UC87pVteBukFzQv_xA1UC6Kg`. The GitHub Pages workflow refreshes separate
+original-title watch pages and `/youtube-video-sitemap.xml` from the feed's
+latest public uploads every Monday. These pages are generated from YouTube's
+published title, description, upload time, and thumbnail; they do not invent
+translations or change YouTube metadata. The generator step is best effort, so
+a temporary YouTube RSS outage will not block the regular site deployment.
 After each successful GitHub Pages deployment, the workflow submits the public
 site and video-page URLs to the IndexNow endpoint. IndexNow shares accepted
 notifications among participating services, including Bing, Yandex, Seznam,
@@ -40,11 +48,11 @@ Separately, verify the GitHub Pages website URL-prefix property in Search
 Console and Bing Webmaster Tools, then submit
 `https://solocampingismail.github.io/solocampingismail/sitemap.xml` and
 `https://solocampingismail.github.io/solocampingismail/video-sitemap.xml`.
-These website sitemaps describe the two videos whose public pages and titles
-were verified; add other videos only after confirming their public URLs and
-metadata. YouTube's own public video and channel pages can be crawled directly
-by search engines, but no submission or verification guarantees indexing,
-placement, impressions, or engagement. There is no universal directory that
+These website sitemaps describe curated bilingual pages and recent uploads
+reported by YouTube's public RSS feed; YouTube RSS provides recent uploads, not
+a complete archive of every historical video. YouTube's own public video and
+channel pages can be crawled directly by search engines, but no submission or
+verification guarantees indexing, placement, impressions, or engagement. There is no universal directory that
 registers a YouTube channel on every discovery service. This project does not
 connect to paid-view, exchange, or bot-traffic services.
 
