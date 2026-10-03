@@ -625,6 +625,7 @@
             <p>
               Bushcraft, outdoor survival ve ASMR temaları
             </p>
+            <a href="videos/DGYvjoCzK9Y/" style="display:inline-block;margin-top:8px;color:#a9d99d">Video sayfası</a>
             <span class="tag">
               🌧️ Yağmur • Bushcraft • ASMR
             </span>
@@ -653,6 +654,7 @@
             <p>
               Hata payı olmayan bir gece kampı Shorts videosu
             </p>
+            <a href="videos/gfYmui17Z5s/" style="display:inline-block;margin-top:8px;color:#a9d99d">Video sayfası</a>
             <span class="tag">
               🌙 Gece Kampı • Shorts
             </span>
@@ -952,7 +954,8 @@
   ========================= */
   if (modal && videoFrame && closeModal) {
     cards.forEach(card => {
-      card.addEventListener("click", () => {
+      card.addEventListener("click", event => {
+        if (event.target.closest("a")) return;
         const videoId = card.dataset.video;
         if (!videoId) return;
         videoFrame.src = "https://www.youtube.com/embed/" + videoId + "?autoplay=1&rel=0";

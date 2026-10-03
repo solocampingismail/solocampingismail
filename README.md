@@ -10,6 +10,23 @@ The Turkish homepage is `/` and the English version is `/en/`. Both include
 canonical and `hreflang` metadata, video links, and the channel's media-kit links.
 The static site can be hosted with GitHub Pages, Netlify, or Vercel.
 
+## Video discovery integrations
+
+The site publishes a standard video sitemap at
+`/video-sitemap.xml`, referenced in `robots.txt` alongside the regular sitemap.
+It currently includes dedicated Turkish and English watch pages, embedded
+YouTube players, Open Graph previews, and `VideoObject` structured data for the
+two videos whose public titles were verified. The watch pages are discoverable
+from the site's video cards. Google, Bing, and other crawlers may use these
+public standards, but indexing or video placements are not guaranteed.
+
+After the site is published, the owner can verify the site in Google Search
+Console and Bing Webmaster Tools and submit both sitemap URLs. Those owner-only
+verification and submission steps cannot be performed from this repository.
+There is no universal directory that registers a YouTube channel on every
+"view" or discovery website. This project does not connect to paid-view,
+exchange, or bot-traffic services.
+
 For local development:
 
 ```bash

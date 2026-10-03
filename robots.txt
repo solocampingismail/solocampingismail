@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://solocampingismail.github.io/solocampingismail/sitemap.xml
+Sitemap: https://solocampingismail.github.io/solocampingismail/video-sitemap.xml

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+  <url>
+    <loc>https://solocampingismail.github.io/solocampingismail/videos/DGYvjoCzK9Y/</loc>
+    <video:video>
+      <video:thumbnail_loc>https://i.ytimg.com/vi/DGYvjoCzK9Y/hqdefault.jpg</video:thumbnail_loc>
+      <video:title>Şiddetli Yağmur Sonrası Çadırda Kamp Yapmak | Bushcraft, Outdoor Survival &amp; ASMR</video:title>
+      <video:description>Şiddetli yağmur sonrasında çadırda kamp, bushcraft, outdoor survival ve ASMR temalı bir solo kamp videosu.</video:description>
+      <video:player_loc>https://www.youtube-nocookie.com/embed/DGYvjoCzK9Y</video:player_loc>
+    </video:video>
+  </url>
+  <url>
+    <loc>https://solocampingismail.github.io/solocampingismail/en/videos/DGYvjoCzK9Y/</loc>
+    <video:video>
+      <video:thumbnail_loc>https://i.ytimg.com/vi/DGYvjoCzK9Y/hqdefault.jpg</video:thumbnail_loc>
+      <video:title>Tent Camping After Heavy Rain | Bushcraft &amp; ASMR</video:title>
+      <video:description>A solo camping video about tent camping after heavy rain, with bushcraft, outdoor survival and ASMR themes.</video:description>
+      <video:player_loc>https://www.youtube-nocookie.com/embed/DGYvjoCzK9Y</video:player_loc>
+    </video:video>
+  </url>
+  <url>
+    <loc>https://solocampingismail.github.io/solocampingismail/videos/gfYmui17Z5s/</loc>
+    <video:video>
+      <video:thumbnail_loc>https://i.ytimg.com/vi/gfYmui17Z5s/hqdefault.jpg</video:thumbnail_loc>
+      <video:title>Zifiri Karanlıkta Tek Başıma Kamp! Hataya Yer Yok!</video:title>
+      <video:description>Zifiri karanlıkta geçen kısa bir tek başına kamp videosu.</video:description>
+      <video:player_loc>https://www.youtube-nocookie.com/embed/gfYmui17Z5s</video:player_loc>
+    </video:video>
+  </url>
+  <url>
+    <loc>https://solocampingismail.github.io/solocampingismail/en/videos/gfYmui17Z5s/</loc>
+    <video:video>
+      <video:thumbnail_loc>https://i.ytimg.com/vi/gfYmui17Z5s/hqdefault.jpg</video:thumbnail_loc>
+      <video:title>Solo Camping in Pitch Darkness | Night Camping Shorts</video:title>
+      <video:description>A short solo-camping video in pitch darkness.</video:description>
+      <video:player_loc>https://www.youtube-nocookie.com/embed/gfYmui17Z5s</video:player_loc>
+    </video:video>
+  </url>
+</urlset>

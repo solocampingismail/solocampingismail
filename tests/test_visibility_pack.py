@@ -1,7 +1,9 @@
 import html
 import json
+import re
 import tempfile
 import unittest
+import xml.etree.ElementTree as ET
 from pathlib import Path
 from unittest.mock import Mock, patch
 
@@ -130,3 +132,61 @@ class YouTubeChannelTests(unittest.TestCase):
         for page in (root / "index.html", root / "en" / "index.html"):
             content = page.read_text(encoding="utf-8")
             self.assertIn("https://www.youtube.com/@solocampingismail", content)
+
+    def test_video_discovery_pages_and_sitemaps_are_connected(self):
+        root = Path(__file__).resolve().parents[1]
+        sitemap = ET.parse(root / "video-sitemap.xml").getroot()
+        namespaces = {
+            "s": "http://www.sitemaps.org/schemas/sitemap/0.9",
+            "v": "http://www.google.com/schemas/sitemap-video/1.1",
+        }
+        entries = sitemap.findall("s:url", namespaces)
+        self.assertEqual(len(entries), 4)
+        for entry in entries:
+            page_url = entry.findtext("s:loc", namespaces=namespaces)
+            self.assertIsNotNone(page_url)
+            relative_page = page_url.split(
+                "https://solocampingismail.github.io/solocampingismail/", 1
+            )[1]
+            self.assertTrue((root / relative_page / "index.html").is_file())
+            self.assertTrue(
+                entry.findtext("v:video/v:title", namespaces=namespaces)
+            )
+            self.assertTrue(
+                entry.findtext("v:video/v:description", namespaces=namespaces)
+            )
+            self.assertTrue(
+                entry.findtext("v:video/v:thumbnail_loc", namespaces=namespaces)
+            )
+            self.assertTrue(
+                entry.findtext("v:video/v:player_loc", namespaces=namespaces)
+            )
+            video_id = entry.findtext("v:video/v:player_loc", namespaces=namespaces)
+            video_id = video_id.rsplit("/", 1)[-1]
+            self.assertIn(
+                f"youtube-nocookie.com/embed/{video_id}",
+                (root / relative_page / "index.html").read_text(encoding="utf-8"),
+            )
+
+        robots = (root / "robots.txt").read_text(encoding="utf-8")
+        self.assertIn("/video-sitemap.xml", robots)
+
+    def test_video_pages_expose_parseable_video_object_data(self):
+        root = Path(__file__).resolve().parents[1]
+        pages = (
+            root / "videos/DGYvjoCzK9Y/index.html",
+            root / "en/videos/DGYvjoCzK9Y/index.html",
+            root / "videos/gfYmui17Z5s/index.html",
+            root / "en/videos/gfYmui17Z5s/index.html",
+        )
+        for page in pages:
+            content = page.read_text(encoding="utf-8")
+            structured_data = re.search(
+                r'<script type="application/ld\+json">\s*(.*?)\s*</script>',
+                content,
+                re.DOTALL,
+            )
+            self.assertIsNotNone(structured_data, page)
+            video_object = json.loads(structured_data.group(1))
+            self.assertEqual(video_object["@type"], "VideoObject")
+            self.assertIn("youtube.com/watch?v=", video_object["url"])
