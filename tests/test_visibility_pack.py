@@ -240,6 +240,11 @@ class YouTubeChannelTests(unittest.TestCase):
             page = (page_dir / "abcDE123_-9" / "index.html").read_text()
             self.assertIn("Rain &amp; Camp &lt;script&gt;", page)
             self.assertIn(r"\u003cscript>", page)
+            self.assertIn(
+                'hreflang="en" href="https://solocampingismail.github.io/'
+                "solocampingismail/en/channel-videos/abcDE123_-9/\"",
+                page,
+            )
             english_page = (
                 root / "en" / "channel-videos" / "abcDE123_-9" / "index.html"
             ).read_text()
@@ -299,6 +304,8 @@ class YouTubeChannelTests(unittest.TestCase):
                 },
                 {"tr", "x-default"},
         )
+        page = discovery.render_page(video)
+        self.assertNotIn('hreflang="en"', page)
 
     def test_current_recent_uploads_have_english_localization_drafts(self):
         root = Path(__file__).resolve().parents[1]

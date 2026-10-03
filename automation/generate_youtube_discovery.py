@@ -159,6 +159,11 @@ def render_page(
     title = html.escape(title_text)
     description = html.escape(description_text)
     meta_description = html.escape(description_text[:300], quote=True)
+    english_alternate = (
+        f'  <link rel="alternate" hreflang="en" href="{english_url}">'
+        if localization is not None
+        else ""
+    )
     original_title = html.escape(video["title"])
     original_description = html.escape(video["description"])
     thumbnail = html.escape(video["thumbnail"], quote=True)
@@ -189,7 +194,7 @@ def render_page(
   <meta name="description" content="{meta_description}">
   <link rel="canonical" href="{page_url}">
   <link rel="alternate" hreflang="tr" href="{turkish_url}">
-  <link rel="alternate" hreflang="en" href="{english_url}">
+{english_alternate}
   <link rel="alternate" hreflang="x-default" href="{turkish_url}">
   <meta property="og:type" content="video.other">
   <meta property="og:title" content="{title}">
@@ -287,10 +292,10 @@ def generate_discovery_pages(
     for video in indexable_videos:
         page_dir = output_dir / video["video_id"]
         page_dir.mkdir(parents=True, exist_ok=True)
-        (page_dir / "index.html").write_text(
-            render_page(video), encoding="utf-8"
-        )
         localized = (localizations or {}).get(video["video_id"])
+        (page_dir / "index.html").write_text(
+            render_page(video, localization=localized), encoding="utf-8"
+        )
         if localized:
             english_page_dir = output_dir.parent / "en" / output_dir.name / video["video_id"]
             english_page_dir.mkdir(parents=True, exist_ok=True)
