@@ -4,7 +4,25 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#0b0f0c">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
   <meta name="description" content="Solo Camping İsmail - Doğada Bir Başına, Doğayla Baş Başa. Kamp, bushcraft, yağmur, fırtına, ateş ve ASMR videoları.">
+  <meta name="keywords" content="solo camping, kamp, bushcraft, doğa, yağmur, fırtına, ateş, asmr, solo camping ismail">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Solo Camping İsmail">
+  <meta property="og:title" content="Solo Camping İsmail | Video Portalı">
+  <meta property="og:description" content="Doğada bir başına, doğayla baş başa. Kamp, bushcraft, yağmur, fırtına, ateş ve ASMR videoları.">
+  <meta property="og:url" content="https://solocampingismail.github.io/solocampingismail/">
+  <meta property="og:image" content="https://solocampingismail.github.io/solocampingismail/assets/og-image.svg">
+  <meta property="og:image:alt" content="Solo Camping İsmail logo ve doğa teması">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Solo Camping İsmail | Video Portalı">
+  <meta name="twitter:description" content="Kamp, bushcraft, yağmur, fırtına, ateş ve ASMR videoları.">
+  <meta name="twitter:image" content="https://solocampingismail.github.io/solocampingismail/assets/og-image.svg">
+  <meta name="twitter:site" content="@solocampingismail">
+  <link rel="canonical" href="https://solocampingismail.github.io/solocampingismail/">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/favicon.svg">
+  <link rel="manifest" href="site.webmanifest">
   <title>Solo Camping İsmail | Video Portalı</title>
   <style>
     * {
@@ -787,6 +805,27 @@
   </section>
 </main>
 
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Solo Camping İsmail",
+    "url": "https://solocampingismail.github.io/solocampingismail/",
+    "logo": "https://solocampingismail.github.io/solocampingismail/assets/logo.svg",
+    "sameAs": [
+      "https://www.youtube.com/@solocampingismail",
+      "https://www.instagram.com/solocampingismail",
+      "https://www.tiktok.com/@solocampingismail",
+      "https://www.facebook.com/solocampingismail",
+      "https://x.com/solocampismail",
+      "https://www.threads.com/@solocampingismail",
+      "https://pin.it/3dMPUqOmS",
+      "https://linktr.ee/solocampingismail"
+    ],
+    "description": "Solo Camping İsmail, doğada kamp, bushcraft, yağmur, fırtına, ateş ve ASMR videoları üreten bir içerik markasıdır."
+  }
+</script>
+
 <footer>
   <div class="container">
     <strong>Solo Camping İsmail</strong>
@@ -840,21 +879,29 @@
   const cards = Array.from(document.querySelectorAll(".video-card"));
   const categoryButtons = Array.from(document.querySelectorAll(".category"));
   const emptyMessage = document.getElementById("emptyMessage");
+  const modal = document.getElementById("modal");
+  const videoFrame = document.getElementById("videoFrame");
+  const closeModal = document.getElementById("closeModal");
   let selectedCategory = "all";
 
   function normalizeText(text) {
     if (!text) return "";
-    return text
+    return String(text)
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
       .toLocaleLowerCase('tr-TR')
       .replace(/ı/g, 'i')
       .replace(/ğ/g, 'g')
       .replace(/ü/g, 'u')
       .replace(/ş/g, 's')
       .replace(/ö/g, 'o')
-      .replace(/ç/g, 'c');
+      .replace(/ç/g, 'c')
+      .replace(/i̇/g, 'i');
   }
 
   function filterVideos() {
+    if (!searchInput || !cards.length || !emptyMessage) return;
+
     const rawSearchText = searchInput.value.trim();
     const searchText = normalizeText(rawSearchText);
     let visibleCount = 0;
@@ -864,7 +911,7 @@
       const categories = category.split(/\s+/);
       const categoryMatch = selectedCategory === "all" || categories.includes(selectedCategory);
 
-      const rawSearchable = (card.dataset.search || "") + " " + card.innerText;
+      const rawSearchable = (card.dataset.search || "") + " " + (card.innerText || "");
       const searchable = normalizeText(rawSearchable);
       const searchMatch = searchText === "" || searchable.includes(searchText);
 
@@ -884,7 +931,9 @@
     }
   }
 
-  searchInput.addEventListener("input", filterVideos);
+  if (searchInput) {
+    searchInput.addEventListener("input", filterVideos);
+  }
 
   categoryButtons.forEach(button => {
     button.addEventListener("click", () => {
@@ -900,39 +949,37 @@
   /* =========================
      VIDEO MODAL
   ========================= */
-  const modal = document.getElementById("modal");
-  const videoFrame = document.getElementById("videoFrame");
-  const closeModal = document.getElementById("closeModal");
-
-  cards.forEach(card => {
-    card.addEventListener("click", () => {
-      const videoId = card.dataset.video;
-      if (!videoId) return;
-      videoFrame.src = "https://www.youtube.com/embed/" + videoId + "?autoplay=1&rel=0";
-      modal.classList.add("open");
-      document.body.style.overflow = "hidden";
+  if (modal && videoFrame && closeModal) {
+    cards.forEach(card => {
+      card.addEventListener("click", () => {
+        const videoId = card.dataset.video;
+        if (!videoId) return;
+        videoFrame.src = "https://www.youtube.com/embed/" + videoId + "?autoplay=1&rel=0";
+        modal.classList.add("open");
+        document.body.style.overflow = "hidden";
+      });
     });
-  });
 
-  function closeVideo() {
-    modal.classList.remove("open");
-    videoFrame.src = "";
-    document.body.style.overflow = "";
+    function closeVideo() {
+      modal.classList.remove("open");
+      videoFrame.src = "";
+      document.body.style.overflow = "";
+    }
+
+    closeModal.addEventListener("click", closeVideo);
+
+    modal.addEventListener("click", event => {
+      if (event.target === modal) {
+        closeVideo();
+      }
+    });
+
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") {
+        closeVideo();
+      }
+    });
   }
-
-  closeModal.addEventListener("click", closeVideo);
-
-  modal.addEventListener("click", event => {
-    if (event.target === modal) {
-      closeVideo();
-    }
-  });
-
-  document.addEventListener("keydown", event => {
-    if (event.key === "Escape") {
-      closeVideo();
-    }
-  });
 
   /* =========================
      INITIAL STATE

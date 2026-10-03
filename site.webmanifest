@@ -1,0 +1,17 @@
+{
+  "name": "Solo Camping İsmail",
+  "short_name": "SoloCamping",
+  "description": "Doğada bir başına, doğayla baş başa. Kamp, bushcraft, yağmur, fırtına, ateş ve ASMR videoları.",
+  "start_url": "/solocampingismail/",
+  "display": "standalone",
+  "background_color": "#071B0C",
+  "theme_color": "#0b0f0c",
+  "icons": [
+    {
+      "src": "assets/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

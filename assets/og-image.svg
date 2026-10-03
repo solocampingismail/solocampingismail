@@ -1,0 +1,21 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#071B0C"/>
+  <rect width="1200" height="630" fill="url(#paint0_radial)"/>
+  <circle cx="908" cy="154" r="160" fill="#173326" fill-opacity="0.8"/>
+  <circle cx="1040" cy="350" r="220" fill="#0C1D13" fill-opacity="0.8"/>
+  <path d="M118 430L330 176L425 301L524 168L772 430H118Z" fill="#A9D99D"/>
+  <path d="M188 445H725L641 332H272L188 445Z" fill="#79C267"/>
+  <path d="M352 270L425 192L498 270H352Z" fill="#ECF9EA"/>
+  <path d="M328 451V335H522V451" stroke="#ECF9EA" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M262 495H588" stroke="#ECF9EA" stroke-width="20" stroke-linecap="round"/>
+  <text x="104" y="196" fill="#79C267" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="700" letter-spacing="8">SOLO CAMPING</text>
+  <text x="104" y="312" fill="#F3F7F2" font-family="Arial, Helvetica, sans-serif" font-size="92" font-weight="800">İSMAİL</text>
+  <text x="104" y="396" fill="#CFE8D0" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="600">Doğada Bir Başına • Doğayla Baş Başa</text>
+  <defs>
+    <radialGradient id="paint0_radial" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(896 118) rotate(115.64) scale(524.774 909.979)">
+      <stop stop-color="#25432A"/>
+      <stop offset="0.56" stop-color="#0E1F14"/>
+      <stop offset="1" stop-color="#071B0C"/>
+    </radialGradient>
+  </defs>
+</svg>
