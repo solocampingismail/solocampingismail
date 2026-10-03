@@ -8,6 +8,7 @@ from pathlib import Path
 from unittest.mock import Mock, patch
 
 import automation.youtube_channel as youtube
+import automation.submit_indexnow as indexnow
 
 
 class YouTubeChannelTests(unittest.TestCase):
@@ -190,3 +191,28 @@ class YouTubeChannelTests(unittest.TestCase):
             video_object = json.loads(structured_data.group(1))
             self.assertEqual(video_object["@type"], "VideoObject")
             self.assertIn("youtube.com/watch?v=", video_object["url"])
+
+    def test_indexnow_submits_only_site_urls_from_both_sitemaps(self):
+        urls = indexnow.load_urls()
+        payload = indexnow.build_payload(
+            urls, indexnow.KEY_PATH.read_text(encoding="utf-8").strip()
+        )
+        self.assertEqual(len(urls), 6)
+        self.assertEqual(payload["host"], "solocampingismail.github.io")
+        self.assertEqual(payload["urlList"], urls)
+        self.assertEqual(
+            payload["keyLocation"],
+            "https://solocampingismail.github.io/solocampingismail/"
+            + indexnow.KEY_PATH.name,
+        )
+        self.assertFalse(any("youtube.com" in url for url in urls))
+
+    def test_indexnow_refuses_invalid_keys_and_external_urls(self):
+        site_url = "https://solocampingismail.github.io/solocampingismail/"
+        with self.assertRaisesRegex(ValueError, "IndexNow key"):
+            indexnow.build_payload([site_url], "bad key")
+        with self.assertRaisesRegex(ValueError, "outside"):
+            indexnow.build_payload(
+                ["https://www.youtube.com/@solocampingismail"],
+                indexnow.KEY_PATH.read_text(encoding="utf-8").strip(),
+            )

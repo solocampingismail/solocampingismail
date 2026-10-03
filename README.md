@@ -19,10 +19,16 @@ YouTube players, Open Graph previews, and `VideoObject` structured data for the
 two videos whose public titles were verified. The watch pages are discoverable
 from the site's video cards. Google, Bing, and other crawlers may use these
 public standards, but indexing or video placements are not guaranteed.
+After each successful GitHub Pages deployment, the workflow submits the public
+site and video-page URLs to the IndexNow endpoint. IndexNow shares accepted
+notifications among participating services (currently including Bing, Yandex,
+Seznam, Naver, Yep, and others listed by the protocol). The published key file
+verifies the GitHub Pages project-path URL scope.
 
-After the site is published, the owner can verify the site in Google Search
-Console and Bing Webmaster Tools and submit both sitemap URLs. Those owner-only
-verification and submission steps cannot be performed from this repository.
+IndexNow does not include Google. The owner should verify the site in Google
+Search Console and Bing Webmaster Tools and submit both sitemap URLs there;
+those owner-only account-verification steps cannot be performed from this
+repository. Search-engine receipt does not guarantee indexing or placement.
 There is no universal directory that registers a YouTube channel on every
 "view" or discovery website. This project does not connect to paid-view,
 exchange, or bot-traffic services.

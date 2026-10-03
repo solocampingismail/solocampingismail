@@ -35,3 +35,6 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Notify participating search engines through IndexNow
+        run: python3 automation/submit_indexnow.py
