@@ -51,41 +51,41 @@ solo camping, forest walk, lake camping, nature, outdoor adventure, tek başına
 ## https://www.youtube.com/watch?v=DGYvjoCzK9Y
 
 ### English title
-Solo Camping in Nature | A Quiet Outdoor Escape
+Tent Camping After Heavy Rain | Bushcraft & ASMR
 
 ### English description
-Take a quiet break in nature with this solo camping trip. Subscribe for more solo camping and outdoor videos.
+A solo camping video about tent camping after heavy rain, with bushcraft, outdoor survival, and ASMR themes. Subscribe for more camping videos.
 
 More from Solo Camping İsmail: https://linktr.ee/solocampingismail
 
 ### Turkish title
-Doğada Tek Başına Kamp | Sakin Bir Kaçış
+Şiddetli Yağmur Sonrası Çadırda Kamp Yapmak 🌧️ | Bushcraft, Outdoor Survival & ASMR
 
 ### Turkish description
-Bu tek başına kamp yolculuğuyla doğada sakin bir mola verin. Yeni solo kamp ve doğa videoları için kanala abone olun.
+Şiddetli yağmur sonrasında çadırda kamp, bushcraft, outdoor survival ve ASMR temalı bir solo kamp videosu. Yeni kamp videoları için kanala abone olun.
 
 Solo Camping İsmail'in diğer hesapları: https://linktr.ee/solocampingismail
 
 ### Suggested tags
-solo camping, camping in nature, outdoor adventure, camping, tek başına kamp, doğada kamp, doğa, kamp
+camping after heavy rain, tent camping, bushcraft, outdoor survival, solo camping, camping ASMR, şiddetli yağmur sonrası kamp, çadırda kamp, doğada hayatta kalma, tek başına kamp, kamp ASMR
 
 ## https://www.youtube.com/watch?v=gfYmui17Z5s
 
 ### English title
-A Solo Camping Trip | Time in the Great Outdoors
+Solo Camping in Pitch Darkness | Night Camping #Shorts
 
 ### English description
-Spend some time outdoors on this solo camping trip. Subscribe for more camping and nature videos.
+A short solo-camping video in pitch darkness. Subscribe for more camping and outdoor videos.
 
 More from Solo Camping İsmail: https://linktr.ee/solocampingismail
 
 ### Turkish title
-Tek Başına Kamp Yolculuğu | Doğada Bir Gün
+Zifiri Karanlıkta Tek Başıma Kamp! ⛺ Hataya Yer Yok! #shorts #camping
 
 ### Turkish description
-Bu tek başına kamp yolculuğunda doğada vakit geçirelim. Yeni kamp ve doğa videoları için kanala abone olun.
+Zifiri karanlıkta geçen kısa bir tek başına kamp videosu. Yeni kamp ve doğa videoları için kanala abone olun.
 
 Solo Camping İsmail'in diğer hesapları: https://linktr.ee/solocampingismail
 
 ### Suggested tags
-solo camping, camping, outdoor life, nature, tek başına kamp, kamp, doğa, kamp hayatı
+solo camping at night, camping in the dark, night camping, camping shorts, outdoor adventure, gece kampı, karanlıkta kamp, tek başına kamp, kamp shorts, doğa

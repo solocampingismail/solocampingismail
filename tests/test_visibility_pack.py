@@ -1,3 +1,4 @@
+import html
 import json
 import tempfile
 import unittest
@@ -21,6 +22,28 @@ class YouTubeChannelTests(unittest.TestCase):
                     metadata["description"],
                 )
                 self.assertNotIn("subtitles", metadata["description"].lower())
+
+    def test_public_video_cards_match_the_verified_youtube_titles(self):
+        root = Path(__file__).resolve().parents[1]
+        turkish_page = (root / "index.html").read_text(encoding="utf-8")
+        english_page = html.unescape(
+            (root / "en" / "index.html").read_text(encoding="utf-8")
+        )
+        heavy_rain = next(
+            video for video in youtube.VIDEO_METADATA
+            if video["video_id"] == "DGYvjoCzK9Y"
+        )
+        night_short = next(
+            video for video in youtube.VIDEO_METADATA
+            if video["video_id"] == "gfYmui17Z5s"
+        )
+
+        self.assertIn(heavy_rain["title"]["tr"], turkish_page)
+        self.assertIn(heavy_rain["title"]["en"], english_page)
+        self.assertIn(night_short["title"]["tr"], turkish_page)
+        self.assertIn(night_short["title"]["en"], english_page)
+        self.assertNotIn("Alone in Nature", english_page)
+        self.assertNotIn("Camping and Nature", english_page)
 
     def test_plan_contains_only_youtube_metadata_in_both_languages(self):
         with tempfile.TemporaryDirectory(dir=youtube.OUTPUT_DIR) as directory:

@@ -53,31 +53,31 @@ VIDEO_METADATA: tuple[Dict[str, Any], ...] = (
     {
         "video_id": "DGYvjoCzK9Y",
         "title": {
-            "en": "Solo Camping in Nature | A Quiet Outdoor Escape",
-            "tr": "Doğada Tek Başına Kamp | Sakin Bir Kaçış",
+            "en": "Tent Camping After Heavy Rain | Bushcraft & ASMR",
+            "tr": "Şiddetli Yağmur Sonrası Çadırda Kamp Yapmak 🌧️ | Bushcraft, Outdoor Survival & ASMR",
         },
         "description": {
-            "en": "Take a quiet break in nature with this solo camping trip. Subscribe for more solo camping and outdoor videos.\n\nMore from Solo Camping İsmail: https://linktr.ee/solocampingismail",
-            "tr": "Bu tek başına kamp yolculuğuyla doğada sakin bir mola verin. Yeni solo kamp ve doğa videoları için kanala abone olun.\n\nSolo Camping İsmail'in diğer hesapları: https://linktr.ee/solocampingismail",
+            "en": "A solo camping video about tent camping after heavy rain, with bushcraft, outdoor survival, and ASMR themes. Subscribe for more camping videos.\n\nMore from Solo Camping İsmail: https://linktr.ee/solocampingismail",
+            "tr": "Şiddetli yağmur sonrasında çadırda kamp, bushcraft, outdoor survival ve ASMR temalı bir solo kamp videosu. Yeni kamp videoları için kanala abone olun.\n\nSolo Camping İsmail'in diğer hesapları: https://linktr.ee/solocampingismail",
         },
         "tags": {
-            "en": ["solo camping", "camping in nature", "outdoor adventure", "camping"],
-            "tr": ["tek başına kamp", "doğada kamp", "doğa", "kamp"],
+            "en": ["camping after heavy rain", "tent camping", "bushcraft", "outdoor survival", "solo camping", "camping ASMR"],
+            "tr": ["şiddetli yağmur sonrası kamp", "çadırda kamp", "bushcraft", "doğada hayatta kalma", "tek başına kamp", "kamp ASMR"],
         },
     },
     {
         "video_id": "gfYmui17Z5s",
         "title": {
-            "en": "A Solo Camping Trip | Time in the Great Outdoors",
-            "tr": "Tek Başına Kamp Yolculuğu | Doğada Bir Gün",
+            "en": "Solo Camping in Pitch Darkness | Night Camping #Shorts",
+            "tr": "Zifiri Karanlıkta Tek Başıma Kamp! ⛺ Hataya Yer Yok! #shorts #camping",
         },
         "description": {
-            "en": "Spend some time outdoors on this solo camping trip. Subscribe for more camping and nature videos.\n\nMore from Solo Camping İsmail: https://linktr.ee/solocampingismail",
-            "tr": "Bu tek başına kamp yolculuğunda doğada vakit geçirelim. Yeni kamp ve doğa videoları için kanala abone olun.\n\nSolo Camping İsmail'in diğer hesapları: https://linktr.ee/solocampingismail",
+            "en": "A short solo-camping video in pitch darkness. Subscribe for more camping and outdoor videos.\n\nMore from Solo Camping İsmail: https://linktr.ee/solocampingismail",
+            "tr": "Zifiri karanlıkta geçen kısa bir tek başına kamp videosu. Yeni kamp ve doğa videoları için kanala abone olun.\n\nSolo Camping İsmail'in diğer hesapları: https://linktr.ee/solocampingismail",
         },
         "tags": {
-            "en": ["solo camping", "camping", "outdoor life", "nature"],
-            "tr": ["tek başına kamp", "kamp", "doğa", "kamp hayatı"],
+            "en": ["solo camping at night", "camping in the dark", "night camping", "camping shorts", "outdoor adventure"],
+            "tr": ["gece kampı", "karanlıkta kamp", "tek başına kamp", "kamp shorts", "doğa"],
         },
     },
 )
