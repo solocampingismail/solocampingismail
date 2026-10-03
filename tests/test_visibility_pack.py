@@ -229,28 +229,91 @@ class YouTubeChannelTests(unittest.TestCase):
                 output_dir=page_dir,
                 sitemap_path=sitemap_path,
                 curated_pages_dir=root / "curated",
+                localizations={
+                    "abcDE123_-9": {
+                        "title": "A Rainy Camp",
+                        "description": "A quiet camp in the rain.",
+                    }
+                },
             )
             self.assertEqual(generated, 1)
             page = (page_dir / "abcDE123_-9" / "index.html").read_text()
             self.assertIn("Rain &amp; Camp &lt;script&gt;", page)
             self.assertIn(r"\u003cscript>", page)
+            english_page = (
+                root / "en" / "channel-videos" / "abcDE123_-9" / "index.html"
+            ).read_text()
+            self.assertIn('<html lang="en">', english_page)
+            self.assertIn("A Rainy Camp", english_page)
+            self.assertIn("Original Turkish title and description", english_page)
+            self.assertIn("Check YouTube’s CC menu", english_page)
             generated_sitemap = ET.parse(sitemap_path).getroot()
             entries = generated_sitemap.findall(
                 "s:url",
                 {"s": "http://www.sitemaps.org/schemas/sitemap/0.9"},
             )
-            self.assertEqual(len(entries), 1)
+            self.assertEqual(len(entries), 2)
+            alternate_namespaces = {
+                "x": "http://www.w3.org/1999/xhtml"
+            }
+            for entry in entries:
+                alternate_hreflangs = {
+                    link.get("hreflang")
+                    for link in entry.findall("x:link", alternate_namespaces)
+                }
+                self.assertEqual(
+                    alternate_hreflangs, {"tr", "en", "x-default"}
+                )
             video_namespaces = {
                 "v": "http://www.google.com/schemas/sitemap-video/1.1"
             }
-            description = entries[0].findtext(
-                "v:video/v:description", namespaces=video_namespaces
-            )
-            publication_date = entries[0].findtext(
-                "v:video/v:publication_date", namespaces=video_namespaces
-            )
-            self.assertLessEqual(len(description), 2048)
-            self.assertEqual(publication_date, videos[0]["published"])
+            for entry in entries:
+                description = entry.findtext(
+                    "v:video/v:description", namespaces=video_namespaces
+                )
+                publication_date = entry.findtext(
+                    "v:video/v:publication_date", namespaces=video_namespaces
+                )
+                self.assertLessEqual(len(description), 2048)
+                self.assertEqual(publication_date, videos[0]["published"])
+
+    def test_video_sitemap_does_not_advertise_missing_language_pages(self):
+        video = {
+                "video_id": "abcDE123_-9",
+                "title": "Rainy camp",
+                "description": "A quiet rainy camp.",
+                "published": "2026-10-01T12:30:00+00:00",
+                "thumbnail": "https://i.ytimg.com/vi/abcDE123_-9/hqdefault.jpg",
+        }
+        sitemap = discovery.build_video_sitemap([video], {})
+        namespaces = {
+                "s": "http://www.sitemaps.org/schemas/sitemap/0.9",
+                "x": "http://www.w3.org/1999/xhtml",
+        }
+        entry = sitemap.find("s:url", namespaces)
+        self.assertIsNotNone(entry)
+        self.assertEqual(
+                {
+                    link.get("hreflang")
+                    for link in entry.findall("x:link", namespaces)
+                },
+                {"tr", "x-default"},
+        )
+
+    def test_current_recent_uploads_have_english_localization_drafts(self):
+        root = Path(__file__).resolve().parents[1]
+        localizations = discovery.load_english_localizations()
+        sitemap = ET.parse(root / "youtube-video-sitemap.xml").getroot()
+        namespaces = {"s": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+        english_video_ids = {
+            entry.findtext("s:loc", namespaces=namespaces)
+            .rstrip("/")
+            .rsplit("/", 1)[-1]
+            for entry in sitemap.findall("s:url", namespaces)
+            if "/en/channel-videos/" in entry.findtext("s:loc", namespaces=namespaces)
+        }
+        self.assertTrue(english_video_ids)
+        self.assertTrue(english_video_ids.issubset(localizations))
 
     def test_channel_rss_generator_rejects_wrong_channel_and_thumbnail_hosts(self):
         wrong_channel_feed = b"""<feed xmlns="http://www.w3.org/2005/Atom"
@@ -269,6 +332,18 @@ class YouTubeChannelTests(unittest.TestCase):
           </entry></feed>"""
         with self.assertRaisesRegex(ValueError, "thumbnail URL"):
             discovery.parse_feed(bad_thumbnail_feed)
+
+    def test_generated_page_metadata_escapes_long_text_before_truncating(self):
+        video = {
+            "video_id": "abcDE123_-9",
+            "title": "Camp",
+            "description": "a" * 299 + "&",
+            "published": "2026-10-01T12:30:00+00:00",
+            "thumbnail": "https://i.ytimg.com/vi/abcDE123_-9/hqdefault.jpg",
+        }
+        page = discovery.render_page(video)
+        expected_meta = f'<meta name="description" content="{"a" * 299}&amp;">'
+        self.assertIn(expected_meta, page)
 
     def test_indexnow_submits_only_site_urls_from_both_sitemaps(self):
         urls = indexnow.load_urls()

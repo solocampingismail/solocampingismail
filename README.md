@@ -21,12 +21,30 @@ from the site's video cards. Google, Bing, and other crawlers may use these
 public standards, but indexing or video placements are not guaranteed.
 
 The channel's public YouTube RSS feed uses the verified channel ID
-`UC87pVteBukFzQv_xA1UC6Kg`. The GitHub Pages workflow refreshes separate
-original-title watch pages and `/youtube-video-sitemap.xml` from the feed's
-latest public uploads every Monday. These pages are generated from YouTube's
-published title, description, upload time, and thumbnail; they do not invent
-translations or change YouTube metadata. The generator step is best effort, so
-a temporary YouTube RSS outage will not block the regular site deployment.
+`UC87pVteBukFzQv_xA1UC6Kg`. The GitHub Pages workflow refreshes Turkish and
+English watch pages and `/youtube-video-sitemap.xml` from the feed's latest
+public uploads every Monday. The Turkish source title and description come
+from YouTube's public feed. English title/summary localization drafts for the
+current 15 recent uploads are maintained in
+[`youtube_english_localizations.json`](automation/youtube_english_localizations.json);
+English pages also expose the original Turkish text so readers can compare it.
+New uploads without a reviewed English entry are published only as Turkish
+pages until their localization is drafted and added. Have a fluent reviewer
+check the English drafts before treating them as final metadata. The deployment
+fails explicitly if the public YouTube feed cannot be read or validated, so a
+stale/empty video sitemap is not silently deployed in place of a fresh one.
+
+### Language rollout
+
+Turkish is the source language; English is the first reviewed localization.
+Prioritize additional YouTube title/description localizations and subtitle
+tracks using actual YouTube Analytics geography and watch-time data rather
+than adding every language with unreviewed machine output. A practical next
+wave to evaluate is Spanish, Arabic, Hindi, Portuguese, Indonesian, French,
+German, Japanese, and Korean. Add each language only after a fluent review of
+the title, description, subtitles, and camping terminology. New language
+pages should be emitted only when that video's reviewed localization exists;
+do not infer a video's content from its title alone.
 After each successful GitHub Pages deployment, the workflow submits the public
 site and video-page URLs to the IndexNow endpoint. IndexNow shares accepted
 notifications among participating services, including Bing, Yandex, Seznam,
@@ -50,11 +68,18 @@ Console and Bing Webmaster Tools, then submit
 `https://solocampingismail.github.io/solocampingismail/video-sitemap.xml`.
 These website sitemaps describe curated bilingual pages and recent uploads
 reported by YouTube's public RSS feed; YouTube RSS provides recent uploads, not
-a complete archive of every historical video. YouTube's own public video and
-channel pages can be crawled directly by search engines, but no submission or
-verification guarantees indexing, placement, impressions, or engagement. There is no universal directory that
-registers a YouTube channel on every discovery service. This project does not
-connect to paid-view, exchange, or bot-traffic services.
+a complete archive of every historical video. For more languages, first have
+a fluent reviewer approve the translated title, description, and subtitles,
+then add those reviewed localizations to the publishing source. In YouTube
+Studio, the channel owner can also add language-specific titles/descriptions
+and subtitle tracks for each video; those account changes are not made by this
+site generator. Automatic captions/translations may not be available or
+accurate for every video. YouTube's own public video and channel pages can be
+crawled directly by search engines, but no submission or verification
+guarantees indexing, placement, impressions, or engagement. There is no
+universal directory that registers a YouTube channel on every discovery
+service. This project does not connect to paid-view, exchange, or bot-traffic
+services.
 
 For local development:
 

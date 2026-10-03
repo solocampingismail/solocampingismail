@@ -30,7 +30,6 @@ jobs:
         uses: actions/configure-pages@v5
 
       - name: Refresh recent YouTube video pages
-        continue-on-error: true
         run: python3 automation/generate_youtube_discovery.py
 
       - name: Upload artifact
