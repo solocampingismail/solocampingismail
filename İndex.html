@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b0f0c">
+  <meta name="description" content="Solo Camping İsmail - Doğada Bir Başına, Doğayla Baş Başa. Kamp, bushcraft, yağmur, fırtına, ateş ve ASMR videoları.">
+  <title>Solo Camping İsmail | Video Portalı</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #080b09;
+      color: #f2f5f2;
+      line-height: 1.5;
+    }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    button,
+    input {
+      font: inherit;
+    }
+    .container {
+      width: min(1100px, 92%);
+      margin: auto;
+    }
+    /* HEADER */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(8, 11, 9, 0.94);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid #1d2720;
+    }
+    .header-inner {
+      min-height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .logo {
+      font-weight: 800;
+      font-size: 17px;
+      letter-spacing: .3px;
+    }
+    .logo span {
+      color: #79c267;
+    }
+    nav {
+      display: flex;
+      gap: 18px;
+      font-size: 14px;
+      color: #b8c1ba;
+    }
+    nav a:hover {
+      color: #fff;
+    }
+    /* HERO */
+    .hero {
+      min-height: 440px;
+      display: flex;
+      align-items: center;
+      background:
+        linear-gradient(rgba(5,8,6,.65), rgba(5,8,6,.9)),
+        radial-gradient(circle at 70% 30%, #25432a 0, #0c140e 45%, #080b09 75%);
+    }
+    .hero-content {
+      padding: 70px 0;
+      max-width: 760px;
+    }
+    .eyebrow {
+      color: #79c267;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+    h1 {
+      font-size: clamp(38px, 7vw, 72px);
+      line-height: 1.02;
+      margin-bottom: 20px;
+    }
+    h1 span {
+      color: #a9d99d;
+    }
+    .hero p {
+      color: #c0c9c2;
+      max-width: 680px;
+      font-size: 17px;
+      margin-bottom: 28px;
+    }
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .btn {
+      border: 1px solid #334239;
+      background: #182119;
+      padding: 13px 18px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 700;
+      color: white;
+      transition: .2s;
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      background: #223125;
+    }
+    .btn-primary {
+      background: #79c267;
+      color: #071007;
+      border-color: #79c267;
+    }
+    .btn-primary:hover {
+      background: #8bd178;
+    }
+    /* SEARCH */
+    .search-section {
+      padding: 32px 0 10px;
+    }
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #111712;
+      border: 1px solid #263129;
+      border-radius: 15px;
+      padding: 14px 17px;
+    }
+    .search-box input {
+      width: 100%;
+      background: transparent;
+      border: 0;
+      outline: 0;
+      color: white;
+      font-size: 16px;
+    }
+    .search-box input::placeholder {
+      color: #778078;
+    }
+    /* SECTION */
+    section {
+      padding: 34px 0;
+    }
+    .section-title {
+      margin-bottom: 18px;
+    }
+    .section-title h2 {
+      font-size: 26px;
+      margin-bottom: 5px;
+    }
+    .section-title p {
+      color: #8e9991;
+      font-size: 14px;
+    }
+    /* CATEGORIES */
+    .categories {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .category {
+      background: #111712;
+      color: #bbc4bd;
+      border: 1px solid #29342c;
+      padding: 10px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: .2s;
+    }
+    .category:hover,
+    .category.active {
+      background: #79c267;
+      color: #071007;
+      border-color: #79c267;
+    }
+    /* VIDEO GRID */
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+    .video-card {
+      overflow: hidden;
+      background: #111712;
+      border: 1px solid #253027;
+      border-radius: 17px;
+      transition: .25s;
+    }
+    .video-card:hover {
+      transform: translateY(-4px);
+      border-color: #4d664f;
+    }
+    .thumb {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      background: #172019;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: .3s;
+    }
+    .video-card:hover .thumb img {
+      transform: scale(1.04);
+    }
+    .play {
+      position: absolute;
+      left: 16px;
+      bottom: 16px;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: rgba(0,0,0,.75);
+      border: 1px solid rgba(255,255,255,.2);
+      font-size: 18px;
+    }
+    .card-body {
+      padding: 17px;
+    }
+    .card-body h3 {
+      font-size: 17px;
+      line-height: 1.35;
+      margin-bottom: 8px;
+    }
+    .card-body p {
+      color: #89948d;
+      font-size: 13px;
+    }
+    .tag {
+      display: inline-block;
+      margin-top: 12px;
+      color: #79c267;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    /* YOUTUBE */
+    .youtube-box {
+      border: 1px solid #273129;
+      background: #111712;
+      border-radius: 18px;
+      overflow: hidden;
+    }
+    .youtube-box iframe {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      display: block;
+      border: 0;
+    }
+    .youtube-info {
+      padding: 18px;
+    }
+    .youtube-info p {
+      color: #929c95;
+      margin-bottom: 15px;
+    }
+    /* SOCIAL */
+    .social-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    .social {
+      padding: 16px;
+      background: #111712;
+      border: 1px solid #273129;
+      border-radius: 14px;
+      text-align: center;
+      font-weight: 700;
+      transition: .2s;
+    }
+    .social:hover {
+      transform: translateY(-3px);
+      background: #1a241c;
+    }
+    /* EMPTY */
+    .empty {
+      display: none;
+      padding: 35px;
+      text-align: center;
+      color: #8c968f;
+      background: #111712;
+      border: 1px solid #273129;
+      border-radius: 16px;
+    }
+    /* FOOTER */
+    footer {
+      margin-top: 30px;
+      padding: 40px 0 90px;
+      border-top: 1px solid #202a23;
+      text-align: center;
+      color: #727c75;
+    }
+    footer strong {
+      display: block;
+      color: #c6cec8;
+      margin-bottom: 5px;
+    }
+    /* MODAL */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 3000;
+      background: rgba(0,0,0,.88);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal.open {
+      display: flex;
+    }
+    .modal-inner {
+      width: min(1000px, 100%);
+      background: #0d120f;
+      border: 1px solid #29352d;
+      border-radius: 17px;
+      overflow: hidden;
+      position: relative;
+    }
+    .modal iframe {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border: 0;
+      display: block;
+    }
+    .close {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      z-index: 2;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 0;
+      background: rgba(0,0,0,.8);
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+    }
+    /* MOBILE NAV */
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 1500;
+      background: rgba(8,11,9,.96);
+      border-top: 1px solid #253027;
+      padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
+      grid-template-columns: repeat(4, 1fr);
+    }
+    .mobile-nav a {
+      text-align: center;
+      color: #9ca59f;
+      font-size: 11px;
+      padding: 5px;
+    }
+    .mobile-nav span {
+      display: block;
+      font-size: 19px;
+      margin-bottom: 2px;
+    }
+    /* RESPONSIVE */
+    @media (max-width: 700px) {
+      nav {
+        display: none;
+      }
+      .hero {
+        min-height: 470px;
+      }
+      .hero-content {
+        padding: 55px 0;
+      }
+      .video-grid {
+        grid-template-columns: 1fr;
+      }
+      .social-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .mobile-nav {
+        display: grid;
+      }
+      footer {
+        padding-bottom: 100px;
+      }
+    }
+    @media (max-width: 430px) {
+      .container {
+        width: 94%;
+      }
+      h1 {
+        font-size: 40px;
+      }
+      .hero p {
+        font-size: 15px;
+      }
+      .social-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="container header-inner">
+    <a href="#anasayfa" class="logo">🏕️ <span>Solo Camping</span> İsmail</a>
+    <nav>
+      <a href="#anasayfa">Ana Sayfa</a>
+      <a href="#videolar">Videolar</a>
+      <a href="#kategoriler">Kategoriler</a>
+      <a href="#sosyal">Sosyal Medya</a>
+    </nav>
+  </div>
+</header>
+
+<main id="anasayfa">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container hero-content">
+      <div class="eyebrow">🌲 SOLO CAMPING İSMAİL</div>
+      <h1>
+        Doğada Bir Başına,<br>
+        <span>Doğayla Baş Başa.</span>
+      </h1>
+      <p>
+        Kamp, bushcraft, yağmur, fırtına, ateş, ASMR ve
+        doğanın içinden gerçek maceralar.
+        Tüm videolar tek bir yerde.
+      </p>
+      <div class="buttons">
+        <button class="btn btn-primary" onclick="document.getElementById('videolar').scrollIntoView()">
+          ▶ Hemen İzle
+        </button>
+        <a
+          class="btn"
+          href="https://www.youtube.com/@solocampingismail"
+          target="_blank"
+          rel="noopener"
+        >
+          ▶ YouTube Kanalı
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEARCH -->
+  <section class="search-section">
+    <div class="container">
+      <div class="search-box">
+        🔎
+        <input
+          id="searchInput"
+          type="search"
+          placeholder="Video ara... örn. yağmur, kamp, ateş, bushcraft"
+          autocomplete="off"
+        >
+      </div>
+    </div>
+  </section>
+
+  <!-- CATEGORIES -->
+  <section id="kategoriler">
+    <div class="container">
+      <div class="section-title">
+        <h2>Kategoriler</h2>
+        <p>İstediğin kamp macerasını seç.</p>
+      </div>
+      <div class="categories">
+        <button class="category active" data-category="all">
+          🔥 Tümü
+        </button>
+        <button class="category" data-category="camp">
+          🏕️ Solo Kamp
+        </button>
+        <button class="category" data-category="bushcraft">
+          🪵 Bushcraft
+        </button>
+        <button class="category" data-category="rain">
+          🌧️ Yağmur & Fırtına
+        </button>
+        <button class="category" data-category="asmr">
+          🔥 Ateş & ASMR
+        </button>
+        <button class="category" data-category="shorts">
+          📱 Shorts
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- VIDEOS -->
+  <section id="videolar">
+    <div class="container">
+      <div class="section-title">
+        <h2>🎬 Video Portalı</h2>
+        <p>Seçtiğin videoyu doğrudan bu sayfada izle.</p>
+      </div>
+
+      <div id="videoGrid" class="video-grid">
+        <!-- VIDEO 1 -->
+        <article
+          class="video-card"
+          data-category="rain asmr"
+          data-search="yağmur çadır kamp asmr fırtına solo camping"
+          data-video="OR62dmVC7h4"
+        >
+          <div class="thumb">
+            <img
+              src="https://i.ytimg.com/vi/OR62dmVC7h4/hqdefault.jpg"
+              alt="Yağmur kampı"
+              loading="lazy"
+            >
+            <div class="play">▶</div>
+          </div>
+          <div class="card-body">
+            <h3>
+              YAĞMUR HİÇ DURMADI — ÇADIR OLMASA YANMIŞTIM
+            </h3>
+            <p>
+              Süper Uyudum • Solo Camping İsmail
+            </p>
+            <span class="tag">
+              🌧️ Yağmur • ASMR
+            </span>
+          </div>
+        </article>
+
+        <!-- VIDEO 2 -->
+        <article
+          class="video-card"
+          data-category="camp bushcraft"
+          data-search="old forest lake river kamp orman göl buz gibi nehir bushcraft"
+          data-video="j1AQwpMbIOw"
+        >
+          <div class="thumb">
+            <img
+              src="https://i.ytimg.com/vi/j1AQwpMbIOw/hqdefault.jpg"
+              alt="Ormanda solo kamp"
+              loading="lazy"
+            >
+            <div class="play">▶</div>
+          </div>
+          <div class="card-body">
+            <h3>
+              I WALKED THROUGH THE OLD FOREST — I CAMP ALONE AT THE LAKE SIDE
+            </h3>
+            <p>
+              Solo Camping • Lake Side • River Adventure
+            </p>
+            <span class="tag">
+              🏕️ Solo Kamp • Bushcraft
+            </span>
+          </div>
+        </article>
+
+        <!-- VIDEO 3 -->
+        <article
+          class="video-card"
+          data-category="camp bushcraft"
+          data-search="solo kamp doğa orman kamp macerası"
+          data-video="DGYvjoCzK9Y"
+        >
+          <div class="thumb">
+            <img
+              src="https://i.ytimg.com/vi/DGYvjoCzK9Y/hqdefault.jpg"
+              alt="Solo Camping İsmail"
+              loading="lazy"
+            >
+            <div class="play">▶</div>
+          </div>
+          <div class="card-body">
+            <h3>
+              Solo Camping İsmail — Doğada Tek Başına
+            </h3>
+            <p>
+              Kamp ve doğa macerası
+            </p>
+            <span class="tag">
+              🏕️ Solo Kamp
+            </span>
+          </div>
+        </article>
+
+        <!-- VIDEO 4 -->
+        <article
+          class="video-card"
+          data-category="camp asmr"
+          data-search="solo camping doğa ateş asmr kamp"
+          data-video="gfYmui17Z5s"
+        >
+          <div class="thumb">
+            <img
+              src="https://i.ytimg.com/vi/gfYmui17Z5s/hqdefault.jpg"
+              alt="Solo Camping İsmail kamp"
+              loading="lazy"
+            >
+            <div class="play">▶</div>
+          </div>
+          <div class="card-body">
+            <h3>
+              Solo Camping İsmail — Kamp ve Doğa
+            </h3>
+            <p>
+              Doğada tek başına kamp deneyimi
+            </p>
+            <span class="tag">
+              🔥 Kamp • ASMR
+            </span>
+          </div>
+        </article>
+      </div>
+
+      <div id="emptyMessage" class="empty">
+        🔎 Aradığın videoyu bulamadık.
+      </div>
+    </div>
+  </section>
+
+  <!-- YOUTUBE CHANNEL -->
+  <section>
+    <div class="container">
+      <div class="section-title">
+        <h2>🎬 Tüm Videolar</h2>
+        <p>
+          Solo Camping İsmail YouTube kanalındaki güncel yüklemeleri
+          tek bir oynatıcı üzerinden keşfet.
+        </p>
+      </div>
+      <div class="youtube-box">
+        <iframe
+          src="https://www.youtube.com/embed/videoseries?list=UU87pVteBukFZqv_xA1UC6Kg"
+          title="Solo Camping İsmail YouTube Videoları"
+          loading="lazy"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen>
+        </iframe>
+        <div class="youtube-info">
+          <p>
+            Buradan kanalın yüklemelerini izleyebilir,
+            YouTube üzerinden tüm videolara ulaşabilirsin.
+          </p>
+          <div class="buttons">
+            <a
+              class="btn btn-primary"
+              href="https://www.youtube.com/@solocampingismail"
+              target="_blank"
+              rel="noopener"
+            >
+              ▶ Kanalı Aç
+            </a>
+            <a
+              class="btn"
+              href="https://www.youtube.com/@solocampingismail?sub_confirmation=1"
+              target="_blank"
+              rel="noopener"
+            >
+              🔔 Abone Ol
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOCIAL -->
+  <section id="sosyal">
+    <div class="container">
+      <div class="section-title">
+        <h2>🌐 Beni Takip Et</h2>
+        <p>Solo Camping İsmail'in tüm sosyal hesapları.</p>
+      </div>
+      <div class="social-grid">
+        <a
+          class="social"
+          href="https://www.youtube.com/@solocampingismail"
+          target="_blank"
+          rel="noopener"
+        >
+          ▶ YouTube
+        </a>
+        <a
+          class="social"
+          href="https://www.instagram.com/solocampingismail"
+          target="_blank"
+          rel="noopener"
+        >
+          📸 Instagram
+        </a>
+        <a
+          class="social"
+          href="https://www.tiktok.com/@solocampingismail"
+          target="_blank"
+          rel="noopener"
+        >
+          🎵 TikTok
+        </a>
+        <a
+          class="social"
+          href="https://www.facebook.com/solocampingismail"
+          target="_blank"
+          rel="noopener"
+        >
+          📘 Facebook
+        </a>
+        <a
+          class="social"
+          href="https://x.com/solocampismail"
+          target="_blank"
+          rel="noopener"
+        >
+          𝕏 X
+        </a>
+        <a
+          class="social"
+          href="https://www.threads.com/@solocampingismail"
+          target="_blank"
+          rel="noopener"
+        >
+          🧵 Threads
+        </a>
+        <a
+          class="social"
+          href="https://pin.it/3dMPUqOmS"
+          target="_blank"
+          rel="noopener"
+        >
+          📌 Pinterest
+        </a>
+        <a
+          class="social"
+          href="https://linktr.ee/solocampingismail"
+          target="_blank"
+          rel="noopener"
+        >
+          🔗 Linktree
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section>
+    <div class="container">
+      <div class="hero" style="min-height:auto; border-radius:20px;">
+        <div class="hero-content" style="padding:45px;">
+          <div class="eyebrow">🌲 SOLO CAMPING İSMAİL</div>
+          <h2 style="font-size:clamp(30px,5vw,50px); margin-bottom:15px;">
+            Doğaya Hazır mısın?
+          </h2>
+          <p>
+            Yeni kamp maceralarını kaçırmamak için
+            Solo Camping İsmail'e katıl.
+          </p>
+          <a
+            class="btn btn-primary"
+            href="https://www.youtube.com/@solocampingismail?sub_confirmation=1"
+            target="_blank"
+            rel="noopener"
+          >
+            🔔 YouTube'a Abone Ol
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container">
+    <strong>Solo Camping İsmail</strong>
+    Doğada Bir Başına, Doğayla Baş Başa.
+    <br><br>
+    © 2026 Solo Camping İsmail
+  </div>
+</footer>
+
+<!-- MOBILE NAV -->
+<div class="mobile-nav">
+  <a href="#anasayfa">
+    <span>⌂</span>
+    Ana Sayfa
+  </a>
+  <a href="#videolar">
+    <span>▶</span>
+    Videolar
+  </a>
+  <a href="#kategoriler">
+    <span>🏕️</span>
+    Kategoriler
+  </a>
+  <a href="#sosyal">
+    <span>🌐</span>
+    Sosyal
+  </a>
+</div>
+
+<!-- VIDEO MODAL -->
+<div id="modal" class="modal">
+  <div class="modal-inner">
+    <button id="closeModal" class="close">
+      ✕
+    </button>
+    <iframe
+      id="videoFrame"
+      src=""
+      title="Solo Camping İsmail Video"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+  </div>
+</div>
+
+<script>
+  /* =========================
+     SEARCH + CATEGORY (TR Locale & Practical Normalization)
+  ========================= */
+  const searchInput = document.getElementById("searchInput");
+  const cards = Array.from(document.querySelectorAll(".video-card"));
+  const categoryButtons = Array.from(document.querySelectorAll(".category"));
+  const emptyMessage = document.getElementById("emptyMessage");
+  let selectedCategory = "all";
+
+  function normalizeText(text) {
+    if (!text) return "";
+    return text
+      .toLocaleLowerCase('tr-TR')
+      .replace(/ı/g, 'i')
+      .replace(/ğ/g, 'g')
+      .replace(/ü/g, 'u')
+      .replace(/ş/g, 's')
+      .replace(/ö/g, 'o')
+      .replace(/ç/g, 'c');
+  }
+
+  function filterVideos() {
+    const rawSearchText = searchInput.value.trim();
+    const searchText = normalizeText(rawSearchText);
+    let visibleCount = 0;
+
+    cards.forEach(card => {
+      const category = card.dataset.category || "";
+      const categories = category.split(/\s+/);
+      const categoryMatch = selectedCategory === "all" || categories.includes(selectedCategory);
+
+      const rawSearchable = (card.dataset.search || "") + " " + card.innerText;
+      const searchable = normalizeText(rawSearchable);
+      const searchMatch = searchText === "" || searchable.includes(searchText);
+
+      if (categoryMatch && searchMatch) {
+        card.style.display = "";
+        visibleCount++;
+      } else {
+        card.style.display = "none";
+      }
+    });
+
+    const isFiltered = searchText !== "" || selectedCategory !== "all";
+    if (isFiltered && visibleCount === 0) {
+      emptyMessage.style.display = "block";
+    } else {
+      emptyMessage.style.display = "none";
+    }
+  }
+
+  searchInput.addEventListener("input", filterVideos);
+
+  categoryButtons.forEach(button => {
+    button.addEventListener("click", () => {
+      categoryButtons.forEach(btn => {
+        btn.classList.remove("active");
+      });
+      button.classList.add("active");
+      selectedCategory = button.dataset.category;
+      filterVideos();
+    });
+  });
+
+  /* =========================
+     VIDEO MODAL
+  ========================= */
+  const modal = document.getElementById("modal");
+  const videoFrame = document.getElementById("videoFrame");
+  const closeModal = document.getElementById("closeModal");
+
+  cards.forEach(card => {
+    card.addEventListener("click", () => {
+      const videoId = card.dataset.video;
+      if (!videoId) return;
+      videoFrame.src = "https://www.youtube.com/embed/" + videoId + "?autoplay=1&rel=0";
+      modal.classList.add("open");
+      document.body.style.overflow = "hidden";
+    });
+  });
+
+  function closeVideo() {
+    modal.classList.remove("open");
+    videoFrame.src = "";
+    document.body.style.overflow = "";
+  }
+
+  closeModal.addEventListener("click", closeVideo);
+
+  modal.addEventListener("click", event => {
+    if (event.target === modal) {
+      closeVideo();
+    }
+  });
+
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape") {
+      closeVideo();
+    }
+  });
+
+  /* =========================
+     INITIAL STATE
+  ========================= */
+  filterVideos();
+</script>
+</body>
+</html>
