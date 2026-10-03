@@ -144,6 +144,20 @@ class YouTubeChannelTests(unittest.TestCase):
             )
             self.assertNotIn("UC87pVteBukFZqv_xA1UC6Kg", content)
 
+    def test_bilingual_homepages_offer_manual_global_channel_sharing(self):
+        root = Path(__file__).resolve().parents[1]
+        for page in (root / "index.html", root / "en" / "index.html"):
+            content = html.unescape(page.read_text(encoding="utf-8"))
+            self.assertIn("https://wa.me/?text=", content)
+            self.assertIn("https://t.me/share/url?", content)
+            self.assertIn("https://www.facebook.com/sharer/sharer.php?", content)
+            self.assertIn("https://twitter.com/intent/tweet?", content)
+            self.assertIn("https://www.reddit.com/submit?", content)
+            self.assertIn(
+                "https://www.youtube.com/@solocampingismail",
+                content,
+            )
+
     def test_video_discovery_pages_and_sitemaps_are_connected(self):
         root = Path(__file__).resolve().parents[1]
         sitemap = ET.parse(root / "video-sitemap.xml").getroot()
