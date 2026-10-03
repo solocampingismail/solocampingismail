@@ -1,98 +1,109 @@
+import json
+import tempfile
 import unittest
+from pathlib import Path
+from unittest.mock import Mock, patch
 
-import automation.generate_visibility_pack as generator
+import automation.youtube_channel as youtube
 
 
-class VisibilityPackTests(unittest.TestCase):
-    def test_pack_uses_existing_videos_and_has_bilingual_captions(self):
-        pack = generator.build_pack("2026-10-03")
+class YouTubeChannelTests(unittest.TestCase):
+    def test_video_metadata_has_bilingual_copy_and_valid_limits(self):
+        self.assertEqual(len(youtube.VIDEO_METADATA), 4)
+        for video in youtube.VIDEO_METADATA:
+            for language in youtube.SUPPORTED_LANGUAGES:
+                metadata = youtube.metadata_for(video, language)
+                youtube.validate_metadata(
+                    metadata["title"], metadata["description"], metadata["tags"]
+                )
+                self.assertIn(
+                    "https://linktr.ee/solocampingismail",
+                    metadata["description"],
+                )
+                self.assertNotIn("subtitles", metadata["description"].lower())
 
-        self.assertEqual(len(pack["posts"]), 4)
-        self.assertEqual(pack["languages"], ["tr", "en"])
-        expected_channels = {
-            "youtube",
-            "instagram",
-            "tiktok",
-            "x",
-            "facebook",
-            "pinterest",
-        }
+    def test_plan_contains_only_youtube_metadata_in_both_languages(self):
+        with tempfile.TemporaryDirectory(dir=youtube.OUTPUT_DIR) as directory:
+            with patch.object(youtube, "OUTPUT_DIR", Path(directory)):
+                output_path = youtube.write_metadata_plan()
+            plan = output_path.read_text(encoding="utf-8")
+            self.assertIn("## https://www.youtube.com/watch?v=OR62dmVC7h4", plan)
+            self.assertIn("### English title", plan)
+            self.assertIn("### Turkish title", plan)
+            self.assertNotIn("Instagram", plan)
 
-        first_post = pack["posts"][0]
-        self.assertEqual(first_post["video_id"], "OR62dmVC7h4")
-        self.assertEqual(
-            first_post["video_url"],
-            "https://www.youtube.com/watch?v=OR62dmVC7h4",
-        )
-        self.assertEqual(set(first_post["localized_platforms"]), {"tr", "en"})
-
-        for language in ("tr", "en"):
-            captions = first_post["localized_platforms"][language]
-            self.assertEqual(
-                set(captions),
-                expected_channels,
+    def test_metadata_apply_requires_exact_handle_confirmation(self):
+        client = Mock()
+        with self.assertRaisesRegex(ValueError, "confirm the target channel"):
+            youtube.apply_metadata(
+                client,
+                youtube.VIDEO_METADATA[0],
+                "en",
+                "different-channel",
             )
-            for platform_name, payload in captions.items():
-                self.assertTrue(payload["body"].strip(), platform_name)
-                self.assertTrue(payload["cta"].strip(), platform_name)
-                if platform_name == "youtube":
-                    site_url = "https://solocampingismail.github.io/solocampingismail/"
-                    expected_link = site_url + ("en/" if language == "en" else "")
-                    self.assertIn(expected_link, payload["body"])
-                elif platform_name in {"instagram", "tiktok"}:
-                    profile_link_prompt = (
-                        "Linktree bağlantısı"
-                        if language == "tr"
-                        else "Linktree link in my profile"
-                    )
-                    self.assertIn(profile_link_prompt, payload["body"])
-                elif platform_name == "pinterest":
-                    self.assertLessEqual(len(payload["body"]), 800)
-                    self.assertIn(
-                        "https://linktr.ee/solocampingismail", payload["body"]
-                    )
-                else:
-                    self.assertIn(first_post["video_url"], payload["body"])
-                    self.assertIn(
-                        "https://linktr.ee/solocampingismail", payload["body"]
-                    )
+        client.get.assert_not_called()
 
-    def test_engagement_questions_are_specific_to_each_video(self):
-        pack = generator.build_pack("2026-10-03")
-        questions = {
-            post["engagement_prompt"]["en"] for post in pack["posts"]
+    def test_metadata_apply_rejects_video_from_another_channel(self):
+        client = Mock()
+        client.get.side_effect = [
+            {"items": [{"id": "UCexample"}]},
+            {
+                "items": [
+                    {
+                        "snippet": {
+                            "channelId": "UCsomeone-else",
+                            "defaultLanguage": "en",
+                        }
+                    }
+                ]
+            },
+        ]
+        with patch.dict("os.environ", {"YOUTUBE_CHANNEL_ID": "UCexample"}):
+            with self.assertRaisesRegex(ValueError, "does not belong"):
+                youtube.apply_metadata(
+                    client, youtube.VIDEO_METADATA[0], "en", "solocampingismail"
+                )
+        client.put.assert_not_called()
+
+    def test_metadata_apply_backs_up_video_and_preserves_other_localizations(self):
+        client = Mock()
+        original_video = {
+            "id": "OR62dmVC7h4",
+            "snippet": {
+                "channelId": "UCexample",
+                "defaultLanguage": "en",
+                "categoryId": "22",
+                "title": "Existing title",
+                "description": "Existing description",
+            },
+            "localizations": {"es": {"title": "Título", "description": "Descripción"}},
         }
-        self.assertEqual(len(questions), len(pack["posts"]))
+        client.get.side_effect = [
+            {"items": [{"id": "UCexample"}]},
+            {"items": [original_video]},
+        ]
+        client.put.return_value = {"items": [{"id": "OR62dmVC7h4"}]}
 
-    def test_x_captions_fit_character_limit_in_both_languages(self):
-        pack = generator.build_pack("2026-10-03")
-        for post in pack["posts"]:
-            for language in ("tr", "en"):
-                caption = post["localized_platforms"][language]["x"]["body"]
-                self.assertLessEqual(len(caption), 280, (language, caption))
-                pin = post["localized_platforms"][language]["pinterest"]["body"]
-                self.assertLessEqual(len(pin), 800, (language, pin))
+        with tempfile.TemporaryDirectory(dir=youtube.OUTPUT_DIR) as directory:
+            with patch.dict("os.environ", {"YOUTUBE_CHANNEL_ID": "UCexample"}):
+                with patch.object(youtube, "BACKUP_DIR", Path(directory)):
+                    result = youtube.apply_metadata(
+                        client,
+                        youtube.VIDEO_METADATA[0],
+                        "en",
+                        "solocampingismail",
+                    )
+            backup = json.loads(Path(directory, Path(result["backup"]).name).read_text())
 
-    def test_media_kit_profiles_match_linktree_in_both_site_languages(self):
-        from pathlib import Path
+        self.assertEqual(backup, original_video)
+        self.assertEqual(result["status"], "updated")
+        update = client.put.call_args.args[2]
+        self.assertEqual(update["localizations"]["es"], original_video["localizations"]["es"])
+        self.assertIn("en", update["localizations"])
+        self.assertIn("tr", update["localizations"])
 
+    def test_media_kit_uses_requested_youtube_handle(self):
         root = Path(__file__).resolve().parents[1]
-        expected_profiles = (
-            "https://www.youtube.com/@solocampismail",
-            "https://www.instagram.com/solocampingismail",
-            "https://www.tiktok.com/@solocampingismail",
-            "https://www.facebook.com/solocampingismails",
-            "https://x.com/solocampismail",
-            "https://www.pinterest.com/solocampingismail",
-        )
         for page in (root / "index.html", root / "en" / "index.html"):
             content = page.read_text(encoding="utf-8")
-            for profile in expected_profiles:
-                self.assertIn(profile, content, (page, profile))
-        turkish_page = (root / "index.html").read_text(encoding="utf-8")
-        self.assertNotIn("youtube.com/@solocampingismail", turkish_page)
-        self.assertNotIn('facebook.com/solocampingismail"', turkish_page)
-
-
-if __name__ == "__main__":
-    unittest.main()
+            self.assertIn("https://www.youtube.com/@solocampingismail", content)

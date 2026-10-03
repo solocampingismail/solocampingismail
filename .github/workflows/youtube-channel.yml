@@ -1,0 +1,91 @@
+name: YouTube channel analytics and metadata
+
+on:
+  schedule:
+    - cron: "0 12 * * 1"
+  workflow_dispatch:
+    inputs:
+      operation:
+        description: "Analytics report, metadata preview, or explicitly approved metadata update"
+        type: choice
+        options:
+          - analytics
+          - metadata-preview
+          - metadata-apply
+        default: analytics
+        required: true
+      video_id:
+        description: "Required for metadata-apply; choose a video listed in the review plan"
+        type: string
+        required: false
+      language:
+        description: "Video default language for the metadata update"
+        type: choice
+        options:
+          - en
+          - tr
+        default: en
+        required: false
+      confirm_handle:
+        description: "Type solocampingismail to confirm the target channel for metadata-apply"
+        type: string
+        required: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: youtube-channel-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  youtube:
+    runs-on: ubuntu-latest
+    env:
+      YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
+      YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
+      YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
+      YOUTUBE_CHANNEL_ID: ${{ secrets.YOUTUBE_CHANNEL_ID }}
+      OPERATION: ${{ inputs.operation || 'analytics' }}
+      VIDEO_ID: ${{ inputs.video_id }}
+      LANGUAGE: ${{ inputs.language || 'en' }}
+      CONFIRM_HANDLE: ${{ inputs.confirm_handle }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Python dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Preview bilingual metadata
+        if: env.OPERATION == 'metadata-preview'
+        run: python automation/youtube_channel.py --mode metadata-preview
+
+      - name: Create channel analytics report
+        if: env.OPERATION == 'analytics'
+        run: python automation/youtube_channel.py --mode analytics
+
+      - name: Apply explicitly confirmed video metadata
+        if: env.OPERATION == 'metadata-apply'
+        run: >-
+          python automation/youtube_channel.py
+          --mode metadata-apply
+          --video-id "$VIDEO_ID"
+          --language "$LANGUAGE"
+          --confirm-handle "$CONFIRM_HANDLE"
+
+      - name: Upload YouTube report and metadata backup
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: youtube-channel-${{ github.run_id }}
+          path: |
+            automation/generated/youtube-seo-plan.md
+            automation/generated/youtube-analytics-report.json
+            automation/generated/youtube-analytics-report.md
+            automation/generated/youtube-metadata-backups/
+          if-no-files-found: ignore
+          retention-days: 30
