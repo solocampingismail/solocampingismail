@@ -26,11 +26,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Python dependencies
+        run: python -m pip install -r requirements.txt
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
       - name: Refresh recent YouTube video pages
-        run: python3 automation/generate_youtube_discovery.py
+        run: python automation/generate_youtube_discovery.py
+
+      - name: Run site and automation tests
+        run: python -m unittest discover -s tests -v
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
@@ -42,4 +53,4 @@ jobs:
         uses: actions/deploy-pages@v4
 
       - name: Notify participating search engines through IndexNow
-        run: python3 automation/submit_indexnow.py
+        run: python automation/submit_indexnow.py

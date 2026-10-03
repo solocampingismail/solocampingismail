@@ -12,22 +12,34 @@ Both homepages also provide visitor-initiated share links for WhatsApp,
 Telegram, Facebook, X, and Reddit; they do not publish automatically. The static
 site can be hosted with GitHub Pages, Netlify, or Vercel.
 
+### GitHub Pages setup
+
+The repository's latest published Pages workflow failed at `Setup Pages`
+because Pages is not enabled for the repository. A repository administrator
+must open **Settings → Pages** and select **GitHub Actions** as the build and
+deployment source. After the site is enabled, pushing `main` will trigger the
+deployment workflow. The workflow cannot enable Pages by itself with the
+default `GITHUB_TOKEN`; automatic enablement would require an additional
+administrator-authorized token, which must not be placed in source code.
+
 ## Video discovery integrations
 
 The site publishes a standard video sitemap at
 `/video-sitemap.xml`, referenced in `robots.txt` alongside the regular sitemap.
-It currently includes dedicated Turkish and English watch pages, embedded
-YouTube players, Open Graph previews, and `VideoObject` structured data for the
-two videos whose public titles were verified. The watch pages are discoverable
-from the site's video cards. Google, Bing, and other crawlers may use these
-public standards, but indexing or video placements are not guaranteed.
+It includes curated Turkish and English watch pages for two videos, with
+embedded YouTube players, Open Graph previews, and `VideoObject` structured
+data. A separate generated sitemap covers the latest public RSS uploads and
+their available Turkish/English watch pages. Google, Bing, and other crawlers
+may use these public standards, but indexing or video placements are not
+guaranteed.
 
 The channel's public YouTube RSS feed uses the verified channel ID
 `UC87pVteBukFzQv_xA1UC6Kg`. The GitHub Pages workflow refreshes Turkish and
-English watch pages and `/youtube-video-sitemap.xml` from the feed's latest
-public uploads every Monday. The Turkish source title and description come
-from YouTube's public feed. English title/summary localization drafts for the
-current 15 recent uploads are maintained in
+English watch pages and `/youtube-video-sitemap.xml` from the latest public
+uploads every Monday and before deployment. It runs the test suite against the
+refreshed pages and sitemaps before publishing. Turkish source titles and
+descriptions come from YouTube's public feed. English title/summary localization
+drafts for the current 15 recent uploads are maintained in
 [`youtube_english_localizations.json`](automation/youtube_english_localizations.json);
 English pages also expose the original Turkish text so readers can compare it.
 New uploads without a reviewed English entry are published only as Turkish
@@ -38,7 +50,7 @@ stale/empty video sitemap is not silently deployed in place of a fresh one.
 
 ### Language rollout
 
-Turkish is the source language; English is the first reviewed localization.
+Turkish is the source language; English is the first localization.
 Prioritize additional YouTube title/description localizations and subtitle
 tracks using actual YouTube Analytics geography and watch-time data rather
 than adding every language with unreviewed machine output. A practical next

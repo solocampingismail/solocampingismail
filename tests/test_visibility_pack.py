@@ -196,6 +196,32 @@ class YouTubeChannelTests(unittest.TestCase):
         robots = (root / "robots.txt").read_text(encoding="utf-8")
         self.assertIn("/video-sitemap.xml", robots)
 
+    def test_every_sitemap_url_and_language_alternate_resolves_locally(self):
+        root = Path(__file__).resolve().parents[1]
+        site_prefix = (
+            "https://solocampingismail.github.io/solocampingismail/"
+        )
+        namespaces = {
+            "s": "http://www.sitemaps.org/schemas/sitemap/0.9",
+            "x": "http://www.w3.org/1999/xhtml",
+        }
+        for sitemap_name in (
+            "sitemap.xml",
+            "video-sitemap.xml",
+            "youtube-video-sitemap.xml",
+        ):
+            sitemap = ET.parse(root / sitemap_name).getroot()
+            for element in (
+                *sitemap.findall(".//s:loc", namespaces),
+                *sitemap.findall(".//x:link", namespaces),
+            ):
+                url = element.text if element.tag.endswith("loc") else element.get("href")
+                self.assertIsNotNone(url)
+                self.assertTrue(url.startswith(site_prefix), url)
+                relative_path = url.removeprefix(site_prefix)
+                page_path = root / relative_path / "index.html"
+                self.assertTrue(page_path.is_file(), f"{sitemap_name}: {url}")
+
     def test_video_pages_expose_parseable_video_object_data(self):
         root = Path(__file__).resolve().parents[1]
         pages = (
