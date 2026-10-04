@@ -1,0 +1,153 @@
+{
+  "search_engines": {
+    "google": {
+      "name": "Google Search",
+      "sitemap_submit": "https://www.google.com/ping?sitemap=",
+      "search_console_url": "https://search.google.com/search-console",
+      "feed_url": "https://www.youtube.com/feeds/videos.xml?channel_id=UC87pVteBukFzQv_xA1UC6Kg",
+      "priority": 1,
+      "regions": ["global"],
+      "requires_auth": true,
+      "api": "search_console",
+      "submission_endpoint": "https://www.google.com/webmasters/tools/submit-url",
+      "indexing_api": "https://indexing.googleapis.com/batch"
+    },
+    "bing": {
+      "name": "Bing Search",
+      "webmaster_tools": "https://www.bing.com/webmaster",
+      "feed_url": "https://www.youtube.com/feeds/videos.xml?channel_id=UC87pVteBukFzQv_xA1UC6Kg",
+      "priority": 2,
+      "regions": ["global"],
+      "requires_auth": true,
+      "api": "bing_webmaster",
+      "submission_endpoint": "https://www.bing.com/webmaster/api/sites/submitUrlBatch",
+      "sitemap_submit": "https://www.bing.com/webmaster/api/sites/submitSitemap"
+    },
+    "yandex": {
+      "name": "Yandex Search",
+      "webmaster_tools": "https://webmaster.yandex.com",
+      "priority": 3,
+      "regions": ["Russia", "CIS", "Turkey"],
+      "requires_auth": true,
+      "api": "yandex_webmaster",
+      "submission_endpoint": "https://api.webmaster.yandex.net/v1/user/{user_id}/sites/{site_id}/crawl-queue/add-url"
+    },
+    "duckduckgo": {
+      "name": "DuckDuckGo",
+      "priority": 4,
+      "regions": ["global"],
+      "requires_auth": false,
+      "uses_bing": true,
+      "note": "Uses Bing index, no direct submission needed"
+    },
+    "baidu": {
+      "name": "Baidu Search",
+      "webmaster_tools": "https://zhanzhang.baidu.com",
+      "priority": 5,
+      "regions": ["China"],
+      "requires_auth": true,
+      "api": "baidu_webmaster",
+      "submission_endpoint": "https://data.zhanzhang.baidu.com/urls"
+    },
+    "indexnow": {
+      "name": "IndexNow Protocol",
+      "endpoint": "https://api.indexnow.org/indexnow",
+      "priority": 1,
+      "regions": ["global"],
+      "requires_auth": true,
+      "participants": ["Bing", "Yandex", "Seznam", "Naver", "Yep"],
+      "key_file_path": ".indexnow/key.txt"
+    }
+  },
+  "social_platforms": {
+    "youtube": {
+      "name": "YouTube",
+      "channel_id": "UC87pVteBukFzQv_xA1UC6Kg",
+      "channel_url": "https://www.youtube.com/@solocampingismail",
+      "priority": 1,
+      "api": "youtube_data_v3",
+      "capabilities": ["video_upload", "metadata_update", "analytics", "community_engagement"],
+      "requires_auth": true,
+      "scopes": [
+        "https://www.googleapis.com/auth/youtube.force-ssl",
+        "https://www.googleapis.com/auth/yt-analytics.readonly"
+      ]
+    },
+    "instagram": {
+      "name": "Instagram",
+      "username": "solocampingismail",
+      "profile_url": "https://www.instagram.com/solocampingismail",
+      "priority": 2,
+      "api": "instagram_graph_api",
+      "capabilities": ["reels_upload", "feed_post", "stories", "analytics"],
+      "requires_auth": true,
+      "content_types": ["Shorts_repurpose", "Behind_scenes", "Gear_reviews"]
+    },
+    "tiktok": {
+      "name": "TikTok",
+      "username": "solocampingismail",
+      "profile_url": "https://www.tiktok.com/@solocampingismail",
+      "priority": 2,
+      "api": "tiktok_open_api",
+      "capabilities": ["video_upload", "analytics", "engagement"],
+      "requires_auth": true,
+      "content_types": ["Solo_camping_tips", "Mistakes", "Gear_hacks", "Shelter_builds"]
+    },
+    "twitter": {
+      "name": "X (Twitter)",
+      "username": "solocampingismail",
+      "priority": 3,
+      "api": "twitter_api_v2",
+      "capabilities": ["tweet_posting", "engagement", "analytics"],
+      "requires_auth": true,
+      "content_types": ["Tips", "Milestones", "New_videos", "Community_engagement"]
+    },
+    "facebook": {
+      "name": "Facebook",
+      "page_name": "Solo Camping İsmail",
+      "priority": 3,
+      "api": "facebook_graph_api",
+      "capabilities": ["video_upload", "community_building"],
+      "requires_auth": true
+    },
+    "pinterest": {
+      "name": "Pinterest",
+      "username": "solocampingismail",
+      "priority": 4,
+      "api": "pinterest_api",
+      "capabilities": ["pins_creation", "ideas_sharing"],
+      "requires_auth": true,
+      "content_types": ["Gear_infographics", "Camping_tips", "Survival_guides"]
+    },
+    "reddit": {
+      "name": "Reddit",
+      "priority": 4,
+      "api": "reddit_api",
+      "capabilities": ["community_engagement", "value_sharing"],
+      "requires_auth": false,
+      "note": "Community participation only, no auto-posting",
+      "target_communities": [
+        "r/camping",
+        "r/bushcraft",
+        "r/CampingGear",
+        "r/wildCamping",
+        "r/survival",
+        "r/outdoors"
+      ]
+    }
+  },
+  "indexing_priority": [
+    "google",
+    "bing",
+    "yandex",
+    "baidu",
+    "indexnow"
+  ],
+  "distribution_priority": [
+    "youtube",
+    "instagram",
+    "tiktok",
+    "twitter",
+    "facebook"
+  ]
+}
